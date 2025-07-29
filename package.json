@@ -1,0 +1,18 @@
+{
+  "name": "voicemessagebot",
+  "version": "1.0.0",
+  "description": "Receives all Whatsapp Webb Voice Messages and transcribes them. Then it sends the Text back",
+  "main": "dist/index.js",
+  "scripts": {
+    "compile": "npx tsc index.ts",
+    "start": "npx tsc -p tsconfig.json && node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "baileys": "^6.7.18",
+    "pino": "^9.7.0",
+    "typescript": "^5.8.3"
+  }
+}
