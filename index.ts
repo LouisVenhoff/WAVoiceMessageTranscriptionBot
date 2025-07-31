@@ -33,6 +33,7 @@ const start = async () => {
             if(contentType == "audioMessage"){
                 console.log("There is an Audio Message!");
                 const filePath = await download(messages[0])
+                console.log(messages[0]);
             }
         }
     });

@@ -72,6 +72,7 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
             if (contentType == "audioMessage") {
                 console.log("There is an Audio Message!");
                 const filePath = yield download(messages[0]);
+                console.log(messages[0]);
             }
         }
     }));
