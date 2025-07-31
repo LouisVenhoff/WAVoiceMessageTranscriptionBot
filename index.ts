@@ -1,6 +1,6 @@
-import makeWASocket, { DisconnectReason, SignalDataSet, SignalDataTypeMap, useMultiFileAuthState } from "baileys";
+import makeWASocket, { DisconnectReason, downloadMediaMessage, getContentType, SignalDataSet, SignalDataTypeMap, useMultiFileAuthState, WAMessage } from "baileys";
 import QRCode from "qrcode";
-import P from "pino";
+import { createWriteStream } from "fs";
 
 
 const start = async () => {
@@ -24,11 +24,27 @@ const start = async () => {
         }
     })
 
-    socket.ev.on("messages.upsert", ({type, messages}) => {
+    socket.ev.on("messages.upsert", async ({type, messages}) => {
         if(type == "notify"){
-            console.log(messages[0].message);
+            //Transcribe message here
+            let contentType = getContentType(messages[0].message);
+
+            if(contentType == "audioMessage"){
+                console.log("There is an Audio Message!");
+                await download(messages[0].message)
+            }
         }
     });
+}
+
+
+const download = async (message: any) => {
+    const stream = await downloadMediaMessage(message, "stream", {});
+
+    const writeStream = createWriteStream("./test.ogg");
+
+    stream.pipe(writeStream);
+
 }
 
 start();

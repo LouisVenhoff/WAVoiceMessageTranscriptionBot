@@ -47,6 +47,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const baileys_1 = __importStar(require("baileys"));
 const qrcode_1 = __importDefault(require("qrcode"));
+const fs_1 = require("fs");
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     const { state, saveCreds } = yield (0, baileys_1.useMultiFileAuthState)("auth_info_baileys");
     const socket = (0, baileys_1.default)({
@@ -63,10 +64,20 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
             start();
         }
     }));
-    socket.ev.on("messages.upsert", ({ type, messages }) => {
+    socket.ev.on("messages.upsert", (_a) => __awaiter(void 0, [_a], void 0, function* ({ type, messages }) {
         if (type == "notify") {
-            console.log(messages[0].message);
+            //Transcribe message here
+            let contentType = (0, baileys_1.getContentType)(messages[0].message);
+            if (contentType == "audioMessage") {
+                console.log("There is an Audio Message!");
+                yield download(messages[0].message);
+            }
         }
-    });
+    }));
+});
+const download = (message) => __awaiter(void 0, void 0, void 0, function* () {
+    const stream = yield (0, baileys_1.downloadMediaMessage)(message, "stream", {});
+    const writeStream = (0, fs_1.createWriteStream)("./test.ogg");
+    stream.pipe(writeStream);
 });
 start();
