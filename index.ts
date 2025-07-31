@@ -1,4 +1,4 @@
-import makeWASocket, { DisconnectReason, downloadMediaMessage, getContentType, SignalDataSet, SignalDataTypeMap, useMultiFileAuthState, WAMessage } from "baileys";
+import makeWASocket, { DisconnectReason, downloadMediaMessage, getContentType, proto, SignalDataSet, SignalDataTypeMap, useMultiFileAuthState, WAMessage } from "baileys";
 import QRCode from "qrcode";
 import { createWriteStream } from "fs";
 
@@ -31,15 +31,21 @@ const start = async () => {
 
             if(contentType == "audioMessage"){
                 console.log("There is an Audio Message!");
-                await download(messages[0].message)
+                await download(messages[0])
             }
         }
     });
 }
 
 
-const download = async (message: any) => {
-    const stream = await downloadMediaMessage(message, "stream", {});
+const download = async (message: proto.IWebMessageInfo) => {
+    
+    const msgObject = {
+        key: message.key,
+        message: message.message,
+    }
+    
+    const stream = await downloadMediaMessage(msgObject, "stream", {});
 
     const writeStream = createWriteStream("./test.ogg");
 

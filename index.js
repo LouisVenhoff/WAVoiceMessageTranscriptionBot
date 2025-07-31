@@ -70,13 +70,17 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
             let contentType = (0, baileys_1.getContentType)(messages[0].message);
             if (contentType == "audioMessage") {
                 console.log("There is an Audio Message!");
-                yield download(messages[0].message);
+                yield download(messages[0]);
             }
         }
     }));
 });
 const download = (message) => __awaiter(void 0, void 0, void 0, function* () {
-    const stream = yield (0, baileys_1.downloadMediaMessage)(message, "stream", {});
+    const msgObject = {
+        key: message.key,
+        message: message.message,
+    };
+    const stream = yield (0, baileys_1.downloadMediaMessage)(msgObject, "stream", {});
     const writeStream = (0, fs_1.createWriteStream)("./test.ogg");
     stream.pipe(writeStream);
 });
