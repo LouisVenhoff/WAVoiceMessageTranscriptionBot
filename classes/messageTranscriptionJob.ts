@@ -1,3 +1,5 @@
+import FormatConverter from "../lib/formatConverter";
+
 class MessageTranscriptionJob{
 
     private source: string;
@@ -9,6 +11,11 @@ class MessageTranscriptionJob{
         this.rawFilePath = rawFilePath;
     }
 
+    public convertToMp3(){
+        const mp3File:string = FormatConverter.convertToMp3(this.rawFilePath);
+        
+        console.log(mp3File);
+    }
     
 
     public isCompleted(){
@@ -16,3 +23,5 @@ class MessageTranscriptionJob{
     }
 
 }
+
+export default MessageTranscriptionJob;

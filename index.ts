@@ -2,6 +2,7 @@ import makeWASocket, { DisconnectReason, downloadMediaMessage, getContentType, p
 import QRCode from "qrcode";
 import { createWriteStream } from "fs";
 import {v4 as uuidv4} from "uuid";
+import MessageTranscriptionJob from "./classes/messageTranscriptionJob";
 
 
 const start = async () => {
@@ -34,6 +35,8 @@ const start = async () => {
                 console.log("There is an Audio Message!");
                 const filePath = await download(messages[0])
                 console.log(messages[0]);
+                const job:MessageTranscriptionJob = new MessageTranscriptionJob("01713432484", filePath);
+                job.convertToMp3();
             }
         }
     });

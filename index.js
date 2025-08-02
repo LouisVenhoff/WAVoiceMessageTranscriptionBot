@@ -49,6 +49,7 @@ const baileys_1 = __importStar(require("baileys"));
 const qrcode_1 = __importDefault(require("qrcode"));
 const fs_1 = require("fs");
 const uuid_1 = require("uuid");
+const messageTranscriptionJob_1 = __importDefault(require("./classes/messageTranscriptionJob"));
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     const { state, saveCreds } = yield (0, baileys_1.useMultiFileAuthState)("auth_info_baileys");
     const socket = (0, baileys_1.default)({
@@ -73,6 +74,8 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
                 console.log("There is an Audio Message!");
                 const filePath = yield download(messages[0]);
                 console.log(messages[0]);
+                const job = new messageTranscriptionJob_1.default("01713432484", filePath);
+                job.convertToMp3();
             }
         }
     }));
