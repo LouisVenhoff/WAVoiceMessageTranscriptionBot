@@ -11,10 +11,14 @@ class MessageTranscriptionJob{
         this.rawFilePath = rawFilePath;
     }
 
-    public convertToMp3(){
-        const mp3File:string = FormatConverter.convertToMp3(this.rawFilePath);
-        
-        console.log(mp3File);
+    public async convertToMp3(){
+        try{
+            const mp3File:string = await FormatConverter.convertToMp3(this.rawFilePath);
+            console.log(mp3File);
+        }catch(err){
+            console.log("Error: ", err);
+        }
+            
     }
     
 

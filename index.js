@@ -50,6 +50,9 @@ const qrcode_1 = __importDefault(require("qrcode"));
 const fs_1 = require("fs");
 const uuid_1 = require("uuid");
 const messageTranscriptionJob_1 = __importDefault(require("./classes/messageTranscriptionJob"));
+const util_1 = require("util");
+const stream_1 = require("stream");
+const pipelineAsync = (0, util_1.promisify)(stream_1.pipeline);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     const { state, saveCreds } = yield (0, baileys_1.useMultiFileAuthState)("auth_info_baileys");
     const socket = (0, baileys_1.default)({
@@ -73,7 +76,7 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
             if (contentType == "audioMessage") {
                 console.log("There is an Audio Message!");
                 const filePath = yield download(messages[0]);
-                console.log(messages[0]);
+                console.log(filePath);
                 const job = new messageTranscriptionJob_1.default("01713432484", filePath);
                 job.convertToMp3();
             }
@@ -85,10 +88,10 @@ const download = (message) => __awaiter(void 0, void 0, void 0, function* () {
         key: message.key,
         message: message.message,
     };
-    const rawFilePath = `./${(0, uuid_1.v4)()}.ogg`;
+    const rawFilePath = `/tmp/${(0, uuid_1.v4)()}.ogg`;
     const stream = yield (0, baileys_1.downloadMediaMessage)(msgObject, "stream", {});
     const writeStream = (0, fs_1.createWriteStream)(rawFilePath);
-    stream.pipe(writeStream);
+    yield pipelineAsync(stream, writeStream);
     return rawFilePath;
 });
 start();

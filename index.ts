@@ -3,10 +3,15 @@ import QRCode from "qrcode";
 import { createWriteStream } from "fs";
 import {v4 as uuidv4} from "uuid";
 import MessageTranscriptionJob from "./classes/messageTranscriptionJob";
+import {promisify} from "util";
+import {pipeline} from "stream";
 
+const pipelineAsync = promisify(pipeline);
 
 const start = async () => {
     const {state, saveCreds} = await useMultiFileAuthState("auth_info_baileys");
+
+    
 
     const socket = makeWASocket({
         auth: state,
@@ -34,7 +39,7 @@ const start = async () => {
             if(contentType == "audioMessage"){
                 console.log("There is an Audio Message!");
                 const filePath = await download(messages[0])
-                console.log(messages[0]);
+                console.log(filePath)
                 const job:MessageTranscriptionJob = new MessageTranscriptionJob("01713432484", filePath);
                 job.convertToMp3();
             }
@@ -50,13 +55,13 @@ const download = async (message: proto.IWebMessageInfo):Promise<string> => {
         message: message.message,
     }
 
-    const rawFilePath:string = `./${uuidv4()}.ogg`;
+    const rawFilePath:string = `/tmp/${uuidv4()}.ogg`;
     
     const stream = await downloadMediaMessage(msgObject, "stream", {});
 
     const writeStream = createWriteStream(rawFilePath);
 
-    stream.pipe(writeStream);
+    await pipelineAsync(stream, writeStream);
 
     return rawFilePath;
 }
