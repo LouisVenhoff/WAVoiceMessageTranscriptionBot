@@ -6,7 +6,7 @@ class FormatConverter{
         
         const videoData = await FormatConverter.generateMediaObject(filePath);
 
-        console.log(videoData);
+        await videoData.fnExtractSoundToMP3("./test.mp3");
         return new Promise((resolve, reject) => {resolve("hi")});
 
     }
