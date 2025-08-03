@@ -37,11 +37,10 @@ const start = async () => {
             let contentType = getContentType(messages[0].message);
 
             if(contentType == "audioMessage"){
-                console.log("There is an Audio Message!");
                 const filePath = await download(messages[0])
                 console.log(filePath)
                 const job:MessageTranscriptionJob = new MessageTranscriptionJob("01713432484", filePath);
-                job.convertToMp3();
+                const convertedFile: string = await job.convertToMp3();
             }
         }
     });

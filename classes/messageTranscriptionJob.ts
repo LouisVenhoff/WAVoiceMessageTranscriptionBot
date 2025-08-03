@@ -4,6 +4,7 @@ class MessageTranscriptionJob{
 
     private source: string;
     private rawFilePath: string;
+    private convertedFilePath: string | null = null;
     private completed: boolean = false;
 
     constructor(source: string, rawFilePath: string){
@@ -14,7 +15,7 @@ class MessageTranscriptionJob{
     public async convertToMp3(){
         try{
             const mp3File:string = await FormatConverter.convertToMp3(this.rawFilePath);
-            console.log(mp3File);
+            this.convertedFilePath = mp3File;
         }catch(err){
             console.log("Error: ", err);
         }
