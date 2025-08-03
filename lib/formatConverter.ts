@@ -2,11 +2,11 @@ import Ffmpeg from "ffmpeg";
 
 class FormatConverter{
 
-    public static async convertToMp3(filePath: string):Promise<string>{
+    public static async convertToMp3(objectId: string):Promise<string>{
         
-        const videoData = await FormatConverter.generateMediaObject(filePath);
+        const videoData = await FormatConverter.generateMediaObject(`/tmp/${objectId}.ogg`);
 
-        await videoData.fnExtractSoundToMP3("./test.mp3");
+        await videoData.fnExtractSoundToMP3(`/tmp/${objectId}.mp3`);
         return new Promise((resolve, reject) => {resolve("hi")});
 
     }

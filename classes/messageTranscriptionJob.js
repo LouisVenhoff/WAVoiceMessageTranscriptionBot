@@ -14,16 +14,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const formatConverter_1 = __importDefault(require("../lib/formatConverter"));
 class MessageTranscriptionJob {
-    constructor(source, rawFilePath) {
+    constructor(source, jobId) {
+        this.convertedFilePath = null;
         this.completed = false;
         this.source = source;
-        this.rawFilePath = rawFilePath;
+        this.jobId = jobId;
     }
-    convertToMp3() {
+    convert() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const mp3File = yield formatConverter_1.default.convertToMp3(this.rawFilePath);
-                console.log(mp3File);
+                const mp3File = yield formatConverter_1.default.convertToMp3(this.jobId);
+                this.convertedFilePath = mp3File;
+                console.log(this.convertedFilePath);
             }
             catch (err) {
                 console.log("Error: ", err);

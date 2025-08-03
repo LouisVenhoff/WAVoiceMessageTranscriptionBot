@@ -5,6 +5,7 @@ import {v4 as uuidv4} from "uuid";
 import MessageTranscriptionJob from "./classes/messageTranscriptionJob";
 import {promisify} from "util";
 import {pipeline} from "stream";
+import { DownloadResult } from "./types/downloadResult";
 
 const pipelineAsync = promisify(pipeline);
 
@@ -37,24 +38,27 @@ const start = async () => {
             let contentType = getContentType(messages[0].message);
 
             if(contentType == "audioMessage"){
-                const filePath = await download(messages[0])
-                console.log(filePath)
-                const job:MessageTranscriptionJob = new MessageTranscriptionJob("01713432484", filePath);
-                const convertedFile: string = await job.convertToMp3();
+                const result: DownloadResult = await download(messages[0])
+                console.log(result.rawFilePath);
+                console.log(result.id);
+                const job:MessageTranscriptionJob = new MessageTranscriptionJob("01713432484", result.id);
+                await job.convert();
             }
         }
     });
 }
 
 
-const download = async (message: proto.IWebMessageInfo):Promise<string> => {
+const download = async (message: proto.IWebMessageInfo):Promise<DownloadResult> => {
     
     const msgObject = {
         key: message.key,
         message: message.message,
     }
 
-    const rawFilePath:string = `/tmp/${uuidv4()}.ogg`;
+    const fileId: string = uuidv4();
+    
+    const rawFilePath:string = `/tmp/${fileId}.ogg`;
     
     const stream = await downloadMediaMessage(msgObject, "stream", {});
 
@@ -62,7 +66,7 @@ const download = async (message: proto.IWebMessageInfo):Promise<string> => {
 
     await pipelineAsync(stream, writeStream);
 
-    return rawFilePath;
+    return {id: fileId, rawFilePath: rawFilePath};
 }
 
 start();

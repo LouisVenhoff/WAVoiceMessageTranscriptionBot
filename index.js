@@ -74,11 +74,11 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
             //Transcribe message here
             let contentType = (0, baileys_1.getContentType)(messages[0].message);
             if (contentType == "audioMessage") {
-                console.log("There is an Audio Message!");
-                const filePath = yield download(messages[0]);
-                console.log(filePath);
-                const job = new messageTranscriptionJob_1.default("01713432484", filePath);
-                job.convertToMp3();
+                const result = yield download(messages[0]);
+                console.log(result.rawFilePath);
+                console.log(result.id);
+                const job = new messageTranscriptionJob_1.default("01713432484", result.id);
+                yield job.convert();
             }
         }
     }));
@@ -88,10 +88,11 @@ const download = (message) => __awaiter(void 0, void 0, void 0, function* () {
         key: message.key,
         message: message.message,
     };
-    const rawFilePath = `/tmp/${(0, uuid_1.v4)()}.ogg`;
+    const fileId = (0, uuid_1.v4)();
+    const rawFilePath = `/tmp/${fileId}.ogg`;
     const stream = yield (0, baileys_1.downloadMediaMessage)(msgObject, "stream", {});
     const writeStream = (0, fs_1.createWriteStream)(rawFilePath);
     yield pipelineAsync(stream, writeStream);
-    return rawFilePath;
+    return { id: fileId, rawFilePath: rawFilePath };
 });
 start();
