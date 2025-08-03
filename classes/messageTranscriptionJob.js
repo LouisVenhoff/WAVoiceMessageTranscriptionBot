@@ -23,9 +23,11 @@ class MessageTranscriptionJob {
     convert() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const mp3File = yield formatConverter_1.default.convertToMp3(this.jobId);
-                this.convertedFilePath = mp3File;
-                console.log(this.convertedFilePath);
+                let conversionOk = yield formatConverter_1.default.convertToMp3(this.jobId);
+                if (!conversionOk) {
+                    throw "There was an unexpected error while converting the files!";
+                }
+                this.convertedFilePath = `/tmp/${this.jobId}.mp3`;
             }
             catch (err) {
                 console.log("Error: ", err);

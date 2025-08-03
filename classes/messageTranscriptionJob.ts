@@ -14,7 +14,12 @@ class MessageTranscriptionJob{
 
     public async convert(){
         try{
-            await FormatConverter.convertToMp3(this.jobId);
+            let conversionOk:boolean = await FormatConverter.convertToMp3(this.jobId);
+            
+            if(!conversionOk){
+                throw "There was an unexpected error while converting the files!";
+            }
+
             this.convertedFilePath = `/tmp/${this.jobId}.mp3`;
         }catch(err){
             console.log("Error: ", err);
