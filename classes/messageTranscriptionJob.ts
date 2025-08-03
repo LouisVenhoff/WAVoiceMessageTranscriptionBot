@@ -14,9 +14,8 @@ class MessageTranscriptionJob{
 
     public async convert(){
         try{
-            const mp3File:string = await FormatConverter.convertToMp3(this.jobId);
-            this.convertedFilePath = mp3File;
-            console.log(this.convertedFilePath);
+            await FormatConverter.convertToMp3(this.jobId);
+            this.convertedFilePath = `/tmp/${this.jobId}.mp3`;
         }catch(err){
             console.log("Error: ", err);
         }
