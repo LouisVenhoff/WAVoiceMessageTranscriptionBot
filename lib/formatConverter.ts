@@ -1,4 +1,4 @@
-import Ffmpeg from "ffmpeg";
+import { exec } from "child_process";
 
 class FormatConverter{
 
@@ -6,34 +6,19 @@ class FormatConverter{
         
         return new Promise(async (resolve, reject) => {
             try{
-                const mediaData = await FormatConverter.generateMediaObject(`/tmp/${objectId}.ogg`);
+               const inputFile:string = `/tmp/${objectId}.ogg`;
+               const outputFile: string = `/tmp/${objectId}.pcm`;
     
-                await mediaData.fnExtractSoundToMP3(`/tmp/${objectId}.mp3`);
-                resolve(true);
+               exec(`ffmpeg -i ${inputFile} -f s16le -ar 16000 -ac 1 ${outputFile}`, (err, stdout, stderr) => {
+                console.log(err, stdout, stderr);
+               });
+               resolve(true);
             }catch(ex: any){
                 console.error(ex);
                 resolve(false);
             }
         });
     }
-
-    private static async generateMediaObject(filePath: string):Promise<any>{
-        try{
-            return new Promise((resolve, reject) => {
-                new Ffmpeg(filePath, async (err, media) => {
-                    if(!err){
-                        resolve(media);
-                    }else{
-                        throw err;
-                    }
-                });
-            });
-        }
-        catch(err: any){
-            console.log("Error: ", err);
-        }
-    }
-
 };
 
 export default FormatConverter;
