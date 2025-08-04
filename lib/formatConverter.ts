@@ -7,9 +7,9 @@ class FormatConverter{
         return new Promise(async (resolve, reject) => {
             try{
                const inputFile:string = `/tmp/${objectId}.ogg`;
-               const outputFile: string = `/tmp/${objectId}.pcm`;
+               const outputFile: string = `/tmp/${objectId}.wav`;
     
-               exec(`ffmpeg -i ${inputFile} -f s16le -ar 16000 -ac 1 ${outputFile}`, (err, stdout, stderr) => {
+               exec(`ffmpeg -i ${inputFile} -ar 16000 -ac 1 ${outputFile}`, (err, stdout, stderr) => {
                 console.log(err, stdout, stderr);
                });
                resolve(true);

@@ -18,7 +18,9 @@ def transcribe():
         return {"error": "Please provide a file as audio_file"}
     
     file = request.files["audio_file"]
-    file.save(f'./uploads/loaded_{file.filename}')
+    filePath = f'./uploads/loaded_{file.filename}'
+
+    file.save(filePath)
     print("File saved!")
     return "<h1>OK</h1>"
 
