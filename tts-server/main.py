@@ -21,12 +21,14 @@ def transcribe():
     filePath = f'./uploads/loaded_{file.filename}'
 
     file.save(filePath)
-    print("File saved!")
-    return "<h1>OK</h1>"
+
+    recognizedText = doTranscription(filePath)
+
+    return {"recognized": recognizedText}
 
 
-def doTranscription():
-    wf = wave.open("./uploads/loaded_f99ff98b-147b-4988-ac51-3cae6f24bc5b.wav", "rb")
+def doTranscription(path):
+    wf = wave.open(path, "rb")
     model = Model("./model/vosk-model-small-de-0.15")
     rec = KaldiRecognizer(model, wf.getframerate())
     
@@ -43,11 +45,7 @@ def doTranscription():
     final_result = json.loads(rec.FinalResult())
     transcription.append(final_result.get("text", ""))
     transcription_text = ' '.join(transcription)
-    print(transcription_text)
-
-
-
-doTranscription()
+    return transcription_text
 
 
 
