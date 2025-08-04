@@ -1,4 +1,7 @@
 from flask import Flask, jsonify, request
+from vosk import Model, KaldiRecognizer
+import wave
+import json
 
 app = Flask(__name__)
 
@@ -18,6 +21,31 @@ def transcribe():
     file.save(f'./uploads/loaded_{file.filename}')
     print("File saved!")
     return "<h1>OK</h1>"
+
+
+def doTranscription():
+    wf = wave.open("./uploads/loaded_f99ff98b-147b-4988-ac51-3cae6f24bc5b.wav", "rb")
+    model = Model("./model/vosk-model-small-de-0.15")
+    rec = KaldiRecognizer(model, wf.getframerate())
+    
+    transcription = []
+
+    while True:
+        data = wf.readframes(4000)
+        if len(data) == 0:
+            break
+        if rec.AcceptWaveform(data):
+            result_dict = json.loads(rec.Result())
+            transcription.append(result_dict.get("text", ""))
+
+    final_result = json.loads(rec.FinalResult())
+    transcription.append(final_result.get("text", ""))
+    transcription_text = ' '.join(transcription)
+    print(transcription_text)
+
+
+
+doTranscription()
 
 
 
