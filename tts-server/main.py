@@ -46,7 +46,3 @@ def doTranscription(path):
     transcription.append(final_result.get("text", ""))
     transcription_text = ' '.join(transcription)
     return transcription_text
-
-
-
-app.run(host="0.0.0.0", port=3000, debug=True)
