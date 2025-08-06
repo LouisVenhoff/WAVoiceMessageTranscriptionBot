@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from vosk import Model, KaldiRecognizer
 import wave
 import json
+import os
 
 app = Flask(__name__)
 
@@ -23,6 +24,8 @@ def transcribe():
     file.save(filePath)
 
     recognizedText = doTranscription(filePath)
+
+    os.remove(filePath)
 
     return {"recognized": recognizedText}
 
