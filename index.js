@@ -78,7 +78,8 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
                 console.log(result.rawFilePath);
                 console.log(result.id);
                 const job = new messageTranscriptionJob_1.default("01713432484", result.id);
-                yield job.transcribe();
+                const output = yield job.transcribe();
+                console.log(output);
             }
         }
     }));

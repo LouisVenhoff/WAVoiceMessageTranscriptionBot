@@ -14,34 +14,45 @@ class MessageTranscriptionJob{
     }
 
     
-    public async transcribe(){
+    public async transcribe():Promise<string>{
         if(!this.convertedFilePath){
             await this.convert();
             console.log("Converted!");
         }
         
-        fs.readFile(this.convertedFilePath, async (err:any, data:any) => {
-            if(err){
-                console.log(err);
-                return;
-            }
+        return new Promise((resolve, reject) => {
 
-            const file = new File([data], "test.wav", { type: "audio/wav" });
+            fs.readFile(this.convertedFilePath, async (err:any, data:any) => {
+                if(err){
+                    console.log(err);
+                    return;
+                }
+    
+                const file = new File([data], "test.wav", { type: "audio/wav" });
+    
+                const payload = new FormData();
+                payload.set("audio_file", file);
+            
+                let result = await fetch("http://localhost:2002/transcribe", {
+                    method: "POST",
+                    body: payload,
+    
+                });
+                
+                if(result.status === 200){
+                    const output:{recognized: string} = await result.json();
 
-            const payload = new FormData();
-            payload.set("audio_file", file);
-        
-            let result = await fetch("http://localhost:2002/transcribe", {
-                method: "POST",
-                body: payload,
-
+                    resolve(output.recognized);
+                }
+                else{
+                    reject();
+                }
+                
             });
 
-            console.log(await result.json());
-        })
 
-        
-        
+        });
+  
     }
     
     
