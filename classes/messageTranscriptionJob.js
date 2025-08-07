@@ -27,17 +27,20 @@ class MessageTranscriptionJob {
                 yield this.convert();
                 console.log("Converted!");
             }
-            fs_1.default.readFile(this.convertedFilePath, (err, data) => {
+            fs_1.default.readFile(this.convertedFilePath, (err, data) => __awaiter(this, void 0, void 0, function* () {
                 if (err) {
                     console.log(err);
                     return;
                 }
-                console.log(data);
-            });
-            const data = new FormData();
-            // let result = fetch("http://localhost:2002", {
-            //     method: "POST",
-            // });
+                const file = new File([data], "test.wav", { type: "audio/wav" });
+                const payload = new FormData();
+                payload.set("audio_file", file);
+                let result = yield fetch("http://localhost:2002/transcribe", {
+                    method: "POST",
+                    body: payload,
+                });
+                console.log(yield result.json());
+            }));
         });
     }
     convert() {

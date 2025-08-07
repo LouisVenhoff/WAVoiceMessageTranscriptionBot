@@ -20,23 +20,28 @@ class MessageTranscriptionJob{
             console.log("Converted!");
         }
         
-        fs.readFile(this.convertedFilePath, (err:any, data:any) => {
+        fs.readFile(this.convertedFilePath, async (err:any, data:any) => {
             if(err){
                 console.log(err);
                 return;
             }
 
-            console.log(data);
+            const file = new File([data], "test.wav", { type: "audio/wav" });
+
+            const payload = new FormData();
+            payload.set("audio_file", file);
+        
+            let result = await fetch("http://localhost:2002/transcribe", {
+                method: "POST",
+                body: payload,
+
+            });
+
+            console.log(await result.json());
         })
 
         
-        const data = new FormData();
         
-
-        // let result = fetch("http://localhost:2002", {
-        //     method: "POST",
-
-        // });
     }
     
     
