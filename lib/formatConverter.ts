@@ -10,9 +10,14 @@ class FormatConverter{
                const outputFile: string = `/tmp/${objectId}.wav`;
     
                exec(`ffmpeg -i ${inputFile} -ar 16000 -ac 1 ${outputFile}`, (err, stdout, stderr) => {
-                console.log(err, stdout, stderr);
+                   console.log(err, stdout, stderr);
+                   if(!err || !stderr){
+                       resolve(true);
+                   }
+                   else{
+                    resolve(false);
+                   }
                });
-               resolve(true);
             }catch(ex: any){
                 console.error(ex);
                 resolve(false);

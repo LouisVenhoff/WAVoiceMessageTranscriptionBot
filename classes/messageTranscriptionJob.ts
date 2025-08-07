@@ -1,4 +1,5 @@
 import FormatConverter from "../lib/formatConverter";
+import fs from "fs";
 
 class MessageTranscriptionJob{
 
@@ -12,7 +13,35 @@ class MessageTranscriptionJob{
         this.jobId = jobId;
     }
 
-    public async convert(){
+    
+    public async transcribe(){
+        if(!this.convertedFilePath){
+            await this.convert();
+            console.log("Converted!");
+        }
+        
+        fs.readFile(this.convertedFilePath, (err:any, data:any) => {
+            if(err){
+                console.log(err);
+                return;
+            }
+
+            console.log(data);
+        })
+
+        
+        const data = new FormData();
+        
+
+        // let result = fetch("http://localhost:2002", {
+        //     method: "POST",
+
+        // });
+    }
+    
+    
+    
+    private async convert(){
         try{
             let conversionOk:boolean = await FormatConverter.convertToMp3(this.jobId);
             
@@ -20,7 +49,7 @@ class MessageTranscriptionJob{
                 throw "There was an unexpected error while converting the files!";
             }
 
-            this.convertedFilePath = `/tmp/${this.jobId}.mp3`;
+            this.convertedFilePath = `/tmp/${this.jobId}.wav`;
         }catch(err){
             console.log("Error: ", err);
         }

@@ -42,7 +42,7 @@ const start = async () => {
                 console.log(result.rawFilePath);
                 console.log(result.id);
                 const job:MessageTranscriptionJob = new MessageTranscriptionJob("01713432484", result.id);
-                await job.convert();
+                await job.transcribe();
             }
         }
     });

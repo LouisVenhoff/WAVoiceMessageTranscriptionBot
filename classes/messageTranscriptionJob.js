@@ -13,12 +13,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const formatConverter_1 = __importDefault(require("../lib/formatConverter"));
+const fs_1 = __importDefault(require("fs"));
 class MessageTranscriptionJob {
     constructor(source, jobId) {
         this.convertedFilePath = null;
         this.completed = false;
         this.source = source;
         this.jobId = jobId;
+    }
+    transcribe() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!this.convertedFilePath) {
+                yield this.convert();
+                console.log("Converted!");
+            }
+            fs_1.default.readFile(this.convertedFilePath, (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                console.log(data);
+            });
+            const data = new FormData();
+            // let result = fetch("http://localhost:2002", {
+            //     method: "POST",
+            // });
+        });
     }
     convert() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -27,7 +47,7 @@ class MessageTranscriptionJob {
                 if (!conversionOk) {
                     throw "There was an unexpected error while converting the files!";
                 }
-                this.convertedFilePath = `/tmp/${this.jobId}.mp3`;
+                this.convertedFilePath = `/tmp/${this.jobId}.wav`;
             }
             catch (err) {
                 console.log("Error: ", err);
