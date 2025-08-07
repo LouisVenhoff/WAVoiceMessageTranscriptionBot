@@ -80,6 +80,7 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
                 const job = new messageTranscriptionJob_1.default("01713432484", result.id);
                 const output = yield job.transcribe();
                 console.log(output);
+                yield socket.sendMessage(messages[0].key.remoteJid, { text: output });
             }
         }
     }));

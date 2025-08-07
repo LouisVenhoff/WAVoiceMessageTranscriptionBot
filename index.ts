@@ -45,6 +45,7 @@ const start = async () => {
                 const output:string = await job.transcribe();
 
                 console.log(output);
+                await socket.sendMessage(messages[0].key.remoteJid, {text: output});
             }
         }
     });
