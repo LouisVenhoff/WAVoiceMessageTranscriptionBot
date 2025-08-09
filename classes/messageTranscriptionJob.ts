@@ -3,13 +3,11 @@ import fs from "fs";
 
 class MessageTranscriptionJob{
 
-    private source: string;
     private jobId: string;
     private convertedFilePath: string | null = null;
     private completed: boolean = false;
 
-    constructor(source: string, jobId: string){
-        this.source = source;
+    constructor(jobId: string){
         this.jobId = jobId;
     }
 
