@@ -39,8 +39,6 @@ const start = async () => {
 
             if(contentType == "audioMessage"){
                 const result: DownloadResult = await download(messages[0])
-                console.log(result.rawFilePath);
-                console.log(result.id);
                 const job:MessageTranscriptionJob = new MessageTranscriptionJob("01713432484", result.id);
                 const output:string = await job.transcribe();
 

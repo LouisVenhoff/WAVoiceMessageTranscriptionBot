@@ -2,7 +2,7 @@ import { exec } from "child_process";
 
 class FormatConverter{
 
-    public static async convertToMp3(objectId: string):Promise<boolean>{
+    public static async convertToWav(objectId: string):Promise<boolean>{
         
         return new Promise(async (resolve, reject) => {
             try{

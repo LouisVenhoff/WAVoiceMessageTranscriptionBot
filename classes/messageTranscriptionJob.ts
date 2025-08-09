@@ -59,7 +59,7 @@ class MessageTranscriptionJob{
     
     private async convert(){
         try{
-            let conversionOk:boolean = await FormatConverter.convertToMp3(this.jobId);
+            let conversionOk:boolean = await FormatConverter.convertToWav(this.jobId);
             
             if(!conversionOk){
                 throw "There was an unexpected error while converting the files!";
