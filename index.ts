@@ -39,9 +39,9 @@ const start = async () => {
                 const result: DownloadResult = await download(messages[0])
                 console.log(result.rawFilePath);
                 console.log(result.id);
-                const job:MessageTranscriptionJob = new MessageTranscriptionJob(result.id);
-                const output:string = await job.transcribe();
-
+                // const job:MessageTranscriptionJob = new MessageTranscriptionJob(result.id);
+                // const output:string = await job.transcribe();
+                const output:string ="Test"
                 console.log(output);
                 await socket.sendMessage(messages[0].key.remoteJid, {text: output});
             }
@@ -68,6 +68,10 @@ const download = async (message: proto.IWebMessageInfo):Promise<DownloadResult> 
     await pipelineAsync(stream, writeStream);
 
     return {id: fileId, rawFilePath: rawFilePath};
+}
+
+const startTranscriptionWorker = async (message: any) => {
+    // Start a new worker here!
 }
 
 start();
