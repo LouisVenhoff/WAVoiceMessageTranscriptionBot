@@ -12,8 +12,6 @@ const pipelineAsync = promisify(pipeline);
 const start = async () => {
     const {state, saveCreds} = await useMultiFileAuthState("auth_info_baileys");
 
-    
-
     const socket = makeWASocket({
         auth: state,
     });
@@ -41,7 +39,7 @@ const start = async () => {
                 const result: DownloadResult = await download(messages[0])
                 console.log(result.rawFilePath);
                 console.log(result.id);
-                const job:MessageTranscriptionJob = new MessageTranscriptionJob("01713432484", result.id);
+                const job:MessageTranscriptionJob = new MessageTranscriptionJob(result.id);
                 const output:string = await job.transcribe();
 
                 console.log(output);
