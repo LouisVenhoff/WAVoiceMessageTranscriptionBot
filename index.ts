@@ -6,10 +6,14 @@ import MessageTranscriptionJob from "./classes/messageTranscriptionJob";
 import {promisify} from "util";
 import {pipeline} from "stream";
 import { DownloadResult } from "./types/downloadResult";
+import WorkerPool from "./lib/workerPool";
 
 const pipelineAsync = promisify(pipeline);
 
+const workers: Worker[] = [];
+
 const start = async () => {
+    const pool:WorkerPool = new WorkerPool();
     const {state, saveCreds} = await useMultiFileAuthState("auth_info_baileys");
 
     const socket = makeWASocket({
@@ -68,10 +72,6 @@ const download = async (message: proto.IWebMessageInfo):Promise<DownloadResult> 
     await pipelineAsync(stream, writeStream);
 
     return {id: fileId, rawFilePath: rawFilePath};
-}
-
-const startTranscriptionWorker = async (message: any) => {
-    // Start a new worker here!
 }
 
 start();

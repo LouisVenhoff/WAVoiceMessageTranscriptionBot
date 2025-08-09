@@ -49,11 +49,13 @@ const baileys_1 = __importStar(require("baileys"));
 const qrcode_1 = __importDefault(require("qrcode"));
 const fs_1 = require("fs");
 const uuid_1 = require("uuid");
-const messageTranscriptionJob_1 = __importDefault(require("./classes/messageTranscriptionJob"));
 const util_1 = require("util");
 const stream_1 = require("stream");
+const workerPool_1 = __importDefault(require("./lib/workerPool"));
 const pipelineAsync = (0, util_1.promisify)(stream_1.pipeline);
+const workers = [];
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
+    const pull = new workerPool_1.default();
     const { state, saveCreds } = yield (0, baileys_1.useMultiFileAuthState)("auth_info_baileys");
     const socket = (0, baileys_1.default)({
         auth: state,
@@ -77,8 +79,9 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
                 const result = yield download(messages[0]);
                 console.log(result.rawFilePath);
                 console.log(result.id);
-                const job = new messageTranscriptionJob_1.default("01713432484", result.id);
-                const output = yield job.transcribe();
+                // const job:MessageTranscriptionJob = new MessageTranscriptionJob(result.id);
+                // const output:string = await job.transcribe();
+                const output = "Test";
                 console.log(output);
                 yield socket.sendMessage(messages[0].key.remoteJid, { text: output });
             }

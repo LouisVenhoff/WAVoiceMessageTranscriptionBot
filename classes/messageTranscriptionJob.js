@@ -15,10 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const formatConverter_1 = __importDefault(require("../lib/formatConverter"));
 const fs_1 = __importDefault(require("fs"));
 class MessageTranscriptionJob {
-    constructor(source, jobId) {
+    constructor(jobId) {
         this.convertedFilePath = null;
         this.completed = false;
-        this.source = source;
         this.jobId = jobId;
     }
     transcribe() {
